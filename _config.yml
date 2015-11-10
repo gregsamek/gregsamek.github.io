@@ -1,8 +1,8 @@
 # Site settings
 title: Greg's Blog
-email: Greg.Samek@gmail.com
+email: greg@samek.io
 description: > # this means to ignore newlines until "baseurl:"
-  Science | Technology | Engineering | Art | Mathematics
+  Science | Tech | Engineering | Art | Math
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://samek.io" # the base hostname & protocol for your site
 twitter_username: gregsamek
@@ -12,4 +12,4 @@ github_username:  gregsamek
 markdown: kramdown
 
 # Posts per page
-paginate: 50
+paginate: 5
