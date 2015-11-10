@@ -10,3 +10,6 @@ github_username:  gregsamek
 
 # Build settings
 markdown: kramdown
+
+# Posts per page
+paginate: 50
