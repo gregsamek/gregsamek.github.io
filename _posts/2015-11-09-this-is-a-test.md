@@ -1,7 +1,7 @@
 ---
 layout:    post
 title:     "This is Only a Test"
-permalink: "test"
+permalink: "blog/test"
 ---
 I can add code snippets in a paragraph like so: `var foobar = 42;`
 
