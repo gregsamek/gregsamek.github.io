@@ -1,11 +1,3 @@
-<!-- JS code initiated by page load -->
-<script>
-$(document).ready(function()
-{
-  //
-});
-</script>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +6,58 @@ $(document).ready(function()
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link href='https://fonts.googleapis.com/css?family=Oxygen:400,700' rel='stylesheet' type='text/css'>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
+
+<!-- JS code initiated by page load -->
+<script>
+$(document).ready(function(){
+
+  var rank = 0;
+  var ranks = ["#rank-1", "#rank-2", "#rank-3", "#rank-4", "#rank-5"];
+  var current_ballot = [];
+
+  $(".btn-primary").on("click", function(){
+    if ($(this).attr("class") === "btn btn-primary"){
+      $(this).addClass("disabled");
+      $("#submit").removeClass("disabled");
+      if (rank <= 4) {
+        $(ranks[rank]).append(rank+1 + " | " + $(this).text());
+        rank += 1;
+        current_ballot.push($(this).attr("id"));
+  }}});
+
+  $("#submit").click(function(){
+    $("#submit").addClass("disabled");
+    $(".btn-primary").removeClass("disabled");
+    $(".btn-default").text(" ");
+    $("#ballot-title").text(" Ballot ");
+    rank = 0;
+    $("textarea").append(current_ballot + ";");
+    current_ballot = [];
+  });
+
+  $("#oops").click(function(){
+    $("#submit").addClass("disabled");
+    $(".btn-primary").removeClass("disabled");
+    $(".btn-default").text(" ");
+    $("#ballot-title").text(" Ballot ");
+    rank = 0;
+    current_ballot = [];
+  });
+
+  $("#calculate").click(function(){
+    var data_pre = $("textarea").val().split(";");
+    console.log(data_pre);
+    var data = data_pre.map(function(x){
+      return x.split(",");
+    });
+    data = data.slice(0, data.length - 1);
+  });
+
+});
+</script>
 
 <style>
 
@@ -52,16 +93,9 @@ body {
 
 p {font-size: 16px;}
 
-.progress {
-  background: rgba(245, 245, 245, 1); 
-  border: 0px solid rgba(245, 245, 245, 1); 
-  border-radius: 5px; height: 45px;
-  margin: 0px;
-}
-.progress-bar-custom {
-  background: rgba(66, 139, 202, 1);
-  font-size: 16px;
-  line-height: 45px;
+.col-centered {
+  float: none;
+  margin: 0 auto;
 }
 
 </style>
@@ -91,28 +125,37 @@ p {font-size: 16px;}
     <div class="row">
 
       <!-- Ballot Buttons -->
-      <div class="btn-group-vertical btn-group-lg col-sm-2">
-        <button type="button" class="btn btn-primary">Club & Claws</button>
-        <button type="button" class="btn btn-primary">White Cross</button>
-        <button type="button" class="btn btn-primary">Flaggy Flag</button>
-        <button type="button" class="btn btn-primary">H.I. Logo</button>
-        <button type="button" class="btn btn-primary">Nail & Gear</button>
-        <button type="button" class="btn btn-success disabled">Submit</button>
-        <button type="button" class="btn btn-danger">Oops</button>
+      <div class="btn-group-vertical btn-group-lg col-sm-2 col-centered">
+        <button type="button" class="btn btn-primary" id="cc">Club & Claws</button>
+        <button type="button" class="btn btn-primary" id="wc">White Cross</button>
+        <button type="button" class="btn btn-primary" id="ff">Flaggy Flag</button>
+        <button type="button" class="btn btn-primary" id="hi">H.I. Logo</button>
+        <button type="button" class="btn btn-primary" id="ng">Nail & Gear</button>
+        <br>
+        <button type="button" class="btn btn-success disabled" id="submit">Submit</button>
+        <button type="button" class="btn btn-danger" id="oops">Oops</button>
       </div>
 
       <!-- Active Ballot -->
-      <div class="btn-group-vertical btn-group-lg col-sm-2">
-        <button type="button" class="btn btn-default">1 | </button>
-        <button type="button" class="btn btn-default">2 | </button>
-        <button type="button" class="btn btn-default">3 | </button>
-        <button type="button" class="btn btn-default">4 | </button>
-        <button type="button" class="btn btn-default">5 | </button>
+      <div class="btn-group-vertical btn-group-lg col-sm-2 col-centered">
+        <button type="button" class="btn btn-default" id="ballot-title"> Ballot </button>
+        <button type="button" class="btn btn-default" id="rank-1"></button>
+        <button type="button" class="btn btn-default" id="rank-2"></button>
+        <button type="button" class="btn btn-default" id="rank-3"></button>
+        <button type="button" class="btn btn-default" id="rank-4"></button>
+        <button type="button" class="btn btn-default" id="rank-5"></button>
       </div>
+    </div>
 
-      <!-- Result Bars -->
-      <div class="col-sm-8">          
-        <table class="table table-bordered table-hover" style="background-color:white;color:black;">
+    <div class="row">
+      <button type="button" class="btn btn-success btn-lg" style="margin:30px" id="calculate">Calculate</button>
+    </div>
+    
+    <div class="row">
+      <!-- Result Table -->
+      <div class="col-sm-8 col-centered">
+      <div class="table-responsive">          
+        <table class="table table-bordered table-striped" style="background-color:white;color:black;">
           <thead>
             <tr>
               <th>Flag</th>
@@ -173,18 +216,17 @@ p {font-size: 16px;}
           </tbody>
         </table>
       </div>
-
+    </div>
   </div>
 </div>
 
 <!-- Raw Data Box -->
 <div class="container-fluid bg-1 text-center">
-  <button type="button" class="btn btn-success btn-lg" style="margin-bottom:20px">Calculate</button>
   <div class="container">
     <form role="form">
       <div class="form-group">
         <label for="comment">Raw Data:</label>
-        <textarea class="form-control" rows="5" id="comment"></textarea>
+        <textarea class="form-control" rows="10" id="raw-data"></textarea>
       </div>
     </form>
   </div>
