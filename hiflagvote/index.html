@@ -39,7 +39,9 @@ $(document).ready(function()
     $(".btn-default").text(" ");
     $("#ballot-title").text(" Ballot ");
     rank = 0;
-    $("textarea").append(current_ballot + ";");
+
+    var temp = $("textarea").val();
+    $("textarea").val(temp + current_ballot + ";");
     current_ballot = [];
   });
 
@@ -55,6 +57,9 @@ $(document).ready(function()
 
   $("#calculate").click(function()
   {
+    // reset the table
+    $(".mutable-table-entry").text("");
+
     // assigns votes in the vote_pool to the correct flag in active_flags
     function count()
     {
@@ -127,18 +132,12 @@ $(document).ready(function()
           low_flag = [flag];
         }
       });
-      
-      console.log("low flag " + low_flag)
-
-      active_flags.forEach(function(flag){console.log("" + flag + doesNotContain(low_flag, flag))})
 
       // removes last place flag(s) from active_flags
       active_flags = active_flags.filter(function(flag)
       {
         return doesNotContain(low_flag, flag);
       });
-
-      console.log("active " + active_flags);
 
       // refills vote_pool with last place flag(s)' votes
       vote_pool = [];
@@ -154,7 +153,11 @@ $(document).ready(function()
     {
       return x.split(",");
     });
-    vote_pool = vote_pool.slice(0, vote_pool.length - 1);
+
+    vote_pool = vote_pool.filter(function(vote)
+    {
+      return vote != "";
+    })
     
     // votes needed for majority
     var win_count = Math.floor(vote_pool.length / 2 + 1);
@@ -178,10 +181,10 @@ $(document).ready(function()
     {
       count();
       updateTable(rounds[i]);
-      console.log(flags);
       if (winnerFound())
       {
         updateTable('final');
+        console.log(flags);
         break; 
       }
       eliminate();
@@ -303,48 +306,48 @@ p {font-size: 16px;}
           <tbody>
             <tr>
               <td>Club & Claws</td>
-              <td id="table-cc-final"></td>
-              <td id="table-cc-one"></td>
-              <td id="table-cc-two"></td>
-              <td id="table-cc-three"></td>
-              <td id="table-cc-four"></td>
-              <td id="table-cc-five"></td>
+              <td class="mutable-table-entry" id="table-cc-final"></td>
+              <td class="mutable-table-entry" id="table-cc-one"></td>
+              <td class="mutable-table-entry" id="table-cc-two"></td>
+              <td class="mutable-table-entry" id="table-cc-three"></td>
+              <td class="mutable-table-entry" id="table-cc-four"></td>
+              <td class="mutable-table-entry" id="table-cc-five"></td>
             </tr>
             <tr>
               <td>White Cross</td>
-              <td id="table-wc-final"></td>
-              <td id="table-wc-one"></td>
-              <td id="table-wc-two"></td>
-              <td id="table-wc-three"></td>
-              <td id="table-wc-four"></td>
-              <td id="table-wc-five"></td>
+              <td class="mutable-table-entry" id="table-wc-final"></td>
+              <td class="mutable-table-entry" id="table-wc-one"></td>
+              <td class="mutable-table-entry" id="table-wc-two"></td>
+              <td class="mutable-table-entry" id="table-wc-three"></td>
+              <td class="mutable-table-entry" id="table-wc-four"></td>
+              <td class="mutable-table-entry" id="table-wc-five"></td>
             </tr>
             <tr>
               <td>Flaggy Flag</td>
-              <td id="table-ff-final"></td>
-              <td id="table-ff-one"></td>
-              <td id="table-ff-two"></td>
-              <td id="table-ff-three"></td>
-              <td id="table-ff-four"></td>
-              <td id="table-ff-five"></td>
+              <td class="mutable-table-entry" id="table-ff-final"></td>
+              <td class="mutable-table-entry" id="table-ff-one"></td>
+              <td class="mutable-table-entry" id="table-ff-two"></td>
+              <td class="mutable-table-entry" id="table-ff-three"></td>
+              <td class="mutable-table-entry" id="table-ff-four"></td>
+              <td class="mutable-table-entry" id="table-ff-five"></td>
             </tr>
             <tr>
               <td>H.I. Logo</td>
-              <td id="table-hi-final"></td>
-              <td id="table-hi-one"></td>
-              <td id="table-hi-two"></td>
-              <td id="table-hi-three"></td>
-              <td id="table-hi-four"></td>
-              <td id="table-hi-five"></td>
+              <td class="mutable-table-entry" id="table-hi-final"></td>
+              <td class="mutable-table-entry" id="table-hi-one"></td>
+              <td class="mutable-table-entry" id="table-hi-two"></td>
+              <td class="mutable-table-entry" id="table-hi-three"></td>
+              <td class="mutable-table-entry" id="table-hi-four"></td>
+              <td class="mutable-table-entry" id="table-hi-five"></td>
             </tr>
             <tr>
               <td>Nail & Gear</td>
-              <td id="table-ng-final"></td>
-              <td id="table-ng-one"></td>
-              <td id="table-ng-two"></td>
-              <td id="table-ng-three"></td>
-              <td id="table-ng-four"></td>
-              <td id="table-ng-five"></td>
+              <td class="mutable-table-entry" id="table-ng-final"></td>
+              <td class="mutable-table-entry" id="table-ng-one"></td>
+              <td class="mutable-table-entry" id="table-ng-two"></td>
+              <td class="mutable-table-entry" id="table-ng-three"></td>
+              <td class="mutable-table-entry" id="table-ng-four"></td>
+              <td class="mutable-table-entry" id="table-ng-five"></td>
             </tr>
           </tbody>
         </table>
@@ -358,7 +361,7 @@ p {font-size: 16px;}
   <div class="container">
     <form role="form">
       <div class="form-group">
-        <label for="comment">Raw vote_pool:</label>
+        <label for="comment">Raw Data:</label>
         <textarea class="form-control" rows="10" id="raw-vote_pool"></textarea>
       </div>
     </form>
