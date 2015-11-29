@@ -55,41 +55,29 @@ $(document).ready(function()
 
   $("#calculate").click(function()
   {
-    var data_pre = $("textarea").val().split(";");
-    var data = data_pre.map(function(x)
+    // assigns votes in the vote_pool to the correct flag in active_flags
+    function count()
     {
-      return x.split(",");
-    });
-    data = data.slice(0, data.length - 1);
-    
-    // votes needed for majority
-    var win_count = Math.floor(data.length / 2 + 1);
-
-    // each flag property is a list of votes for that flag
-    var flags = 
-    {
-      cc: [], 
-      wc: [], 
-      hi: [], 
-      ff: [], 
-      ng: []
-    };
-
-    // used for convienience
-    var flag_names = ['cc', 'wc', 'hi', 'ff', 'ng'];
-
-    // counts the votes for a particular flag 
-    function count(flag, source)
-    {
-      source = source || data;
-      flags[flag] = flags[flag].concat(source.filter(function(vote)
+      vote_pool.forEach(function(vote)
       {
-          return vote[0] === flag;
-      }));
+        for (var i = 0; i < vote.length; i++)
+        {
+          for (var j = 0; j < active_flags.length; j++)
+          {
+            if (vote[i] === active_flags[j])
+            {
+              flags[active_flags[j]].push(vote);
+              i = Infinity;
+              j = Infinity;
+            }
+          }
+        }
+      });
+
     };
 
     // checks to see if a majority has been achieved
-    function winner_found()
+    function winnerFound()
     {
       for (var flag in flags)
       {
@@ -102,33 +90,34 @@ $(document).ready(function()
       return false;
     }
 
-    // count first-choice votes
-    flag_names.forEach(function(flag)
+    // update table for round the specified round
+    function updateTable(round)
     {
-      count(flag);
-    });
-
-    // update table for round one
-    flag_names.forEach(function(flag)
-    {
-      $('#table-' + flag + '-one').text(flags[flag].length);
-    });
-
-    // if winner found, update final col of table & end election
-    if (winner_found())
-    {
-      flag_names.forEach(function(flag)
+      active_flags.forEach(function(flag)
       {
-        $('#table-' + flag + '-final').text(flags[flag].length);
-      })
+        $('#table-' + flag + '-' + round).text(flags[flag].length);
+      });
     }
 
-    // no winner -> eliminate low flag & redistribute
+    // used for checking if a value is in a set
+    function doesNotContain(set, value)
+    {
+      if (set.indexOf(value) === -1)
+      {
+        return true;
+      }
+      return false;
+    }
+
+    // no winner -> eliminate low flag(s) from active_flags
+    // and reload the vote_pool with the votes of the now inactive flag(s)
     function eliminate()
     {
       var low_flag = [];
       var low_votes = Infinity;
-      flag_names.forEach(function(flag)
+
+      // finds the last place flag(s) for the round
+      active_flags.forEach(function(flag)
       {
         if (flags[flag].length === low_votes)
           low_flag.push(flag);
@@ -138,32 +127,65 @@ $(document).ready(function()
           low_flag = [flag];
         }
       });
-
-      function doesNotContain(set, value)
-      {
-        set.forEach(function(s)
-        {
-          if (s === value)
-            return false;
-        });
-        return true;
-      }
       
-      flag_names = flag_names.filter(function(flag)
+      console.log("low flag " + low_flag)
+
+      active_flags.forEach(function(flag){console.log("" + flag + doesNotContain(low_flag, flag))})
+
+      // removes last place flag(s) from active_flags
+      active_flags = active_flags.filter(function(flag)
       {
         return doesNotContain(low_flag, flag);
       });
 
-      data = [];
+      console.log("active " + active_flags);
+
+      // refills vote_pool with last place flag(s)' votes
+      vote_pool = [];
       low_flag.forEach(function(flag)
       {
-        data = data.concat(flags[flag]);
+        vote_pool = vote_pool.concat(flags[flag]);
       });
     }
 
-    eliminate();
-    console.log(data);
+    // parse the raw data field for the list of votes
+    var vote_pool_pre = $("textarea").val().split(";");
+    var vote_pool = vote_pool_pre.map(function(x)
+    {
+      return x.split(",");
+    });
+    vote_pool = vote_pool.slice(0, vote_pool.length - 1);
     
+    // votes needed for majority
+    var win_count = Math.floor(vote_pool.length / 2 + 1);
+
+    // each flag property is a list of votes for that flag
+    var flags = 
+    {
+      cc: [], 
+      wc: [], 
+      hi: [], 
+      ff: [], 
+      ng: []
+    };
+
+    // used for keeping track of flags after each round
+    var active_flags = ['cc', 'wc', 'hi', 'ff', 'ng'];
+
+    // commence voting!
+    var rounds = ['one','two','three','four','five'];
+    for (var i = 0; i < 5; i++)
+    {
+      count();
+      updateTable(rounds[i]);
+      console.log(flags);
+      if (winnerFound())
+      {
+        updateTable('final');
+        break; 
+      }
+      eliminate();
+    };
 
   });
 
@@ -217,7 +239,7 @@ p {font-size: 16px;}
   <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <button type="button" class="navbar-toggle" vote_pool-toggle="collapse" vote_pool-target="#myNavbar">
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
               <span class="icon-bar"></span> 
@@ -331,13 +353,13 @@ p {font-size: 16px;}
   </div>
 </div>
 
-<!-- Raw Data Box -->
+<!-- Raw vote_pool Box -->
 <div class="container-fluid bg-1 text-center">
   <div class="container">
     <form role="form">
       <div class="form-group">
-        <label for="comment">Raw Data:</label>
-        <textarea class="form-control" rows="10" id="raw-data"></textarea>
+        <label for="comment">Raw vote_pool:</label>
+        <textarea class="form-control" rows="10" id="raw-vote_pool"></textarea>
       </div>
     </form>
   </div>
