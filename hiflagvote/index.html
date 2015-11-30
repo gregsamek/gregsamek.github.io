@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
   <title>HI Flag Vote</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+  <meta name="theme-color" content="#ffffff">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -227,9 +232,16 @@ body {
     color: #f5f6f7;
 }
 
-p {font-size: 16px;}
+p {
+  font-size: 16px;
+}
 
 .col-centered {
+  float: none;
+  margin: 0 auto;
+}
+
+img {
   float: none;
   margin: 0 auto;
 }
@@ -370,12 +382,49 @@ p {font-size: 16px;}
 
 <!-- Instructions -->
 <div class="container-fluid bg-1 text-center" id="instructions">
-  <h3>Instructions</h3>
-  <p>to do</p>
+  <h2>Instructions</h2>
+  <br>
+  <div class="row">
+    <p class="col-sm-5 col-centered">Cast a ballot by clicking the blue flag buttons in the desired order and pressing SUBMIT</p>
+  </div>
+  <br>
+  <img class="img-responsive img-thumbnail" src="cast_a_vote.gif">
+  <br><br><br>
+
+  <div class="row">
+    <p class="col-sm-5 col-centered">Each time you press SUBMIT, a vote is added to the text area labeled RAW DATA. Votes are separated by semicolons. Within each vote, flags are listed in descending order of preference and separated by commas.<p/>
+  </div>
+  <br>
+  <img class="img-responsive img-thumbnail" src="votes_to_data.png" style="max-width:300px">
+  <br><br><br>
+
+  <div class="row">
+    <p class="col-sm-5 col-centered">When you're ready to count ballots, press CALCULATE. This is when the magic happens. The app reads in the data and conducts an instant-runoff election. You can see the votes after each round.</p>
+  </div>
+  <br>
+  <img class="img-responsive img-thumbnail" src="counting_votes.gif">
+  <br><br><br>
+
+  <div class="row">
+    <p class="col-sm-5 col-centered">Please note that this web app DOES NOT SAVE DATA anywhere except for the text saved in the DAW DATA box. Everything is done "in-browser" - there is no connection to a online database. For this reason I recommend periodically copying the data and saving it in a separate txt document. At any point you can paste votes into the raw data and recalculate the results. <br><br>This also allows for a "divide and conquer" approach where two people can enter half the votes separately and then paste their data together at the end. Just make sure there is indeed a semicolon separating the pasted sections.</p>
+  </div>
+  <br>
+  <img class="img-responsive img-thumbnail" src="pasting_votes.gif">
+  <br><br><br>
+
+  <div class="row">
+    <p class="col-sm-5 col-centered">This site is <a href="https://github.com/gregsamek/gregsamek.github.io/tree/master/hiflagvote" link="green">hosted on GitHub</a>, so you can easily check out the code for yourself. </p>
+  </div>
 </div>
 
   <!-- Footer -->
   <footer class="container-fluid bg-1 text-center">
+      <div class="row">
+      <div class="col-xs-5 col-md-5"></div>
+      <div class="col-xs-1 col-md-1"><a href="https://twitter.com/GregSamek"><img src="twitter.svg" style="max-width:50px"></a></div>
+      <div class="col-xs-1 col-md-1"><a href="https://github.com/gregsamek"><img src="github.svg" style="max-width:50px"></a></div>
+      </div>
+      <br>
       <p>Copyright © Gregory Samek</p> 
   </footer>
 
